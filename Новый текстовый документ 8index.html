@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Инвестиционный портфель | Магистерская диссертация</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        .title-font { font-family: 'Space Grotesk', monospace; font-weight: 600; letter-spacing: -0.02em; }
+        .glass { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); }
+        .hero-bg { background: linear-gradient(135deg, #0a0f2a 0%, #0f172a 50%, #1e1b4b 100%); }
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem !important; }
+            .glass { backdrop-filter: none; }
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em;
+        }
+        input:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-800">
+
+    <!-- NAVBAR -->
+    <nav class="border-b border-slate-800 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 bg-emerald-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-bold text-base sm:text-xl">📊</div>
+                <h1 class="title-font text-lg sm:text-2xl font-semibold tracking-tight">Инвестиционный портфель</h1>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 sm:gap-8 text-xs sm:text-sm font-medium">
+                <a href="#overview" class="hover:text-emerald-600 transition-colors hidden sm:block">Структура</a>
+                <a href="#metrics" class="hover:text-emerald-600 transition-colors hidden sm:block">Показатели</a>
+                <a href="#calculator" class="hover:text-emerald-600 transition-colors">Калькулятор</a>
+                <a href="#charts" class="hover:text-emerald-600 transition-colors hidden sm:block">Графики</a>
+                <a href="#investment" class="hover:text-emerald-600 transition-colors hidden sm:block">Инвестировать</a>
+                <div class="text-[10px] sm:text-xs px-3 py-2 sm:px-5 sm:py-3 bg-emerald-100 text-emerald-700 rounded-full font-medium text-center leading-tight">
+                    ВКР 2026<br class="sm:hidden"> Кривов П.
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-bg text-white py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div>
+                <h2 class="hero-title title-font text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight tracking-tighter mb-4 sm:mb-6">
+                    Формирование инвестиционного портфеля для частного инвестора
+                </h2>
+                <p class="text-base sm:text-xl text-slate-300 mb-6 sm:mb-8 max-w-lg">
+                    Интерактивная платформа для помощи в формировании инвестиционной стратегии.<br>
+                    Выберите сценарий и получите прогноз доходности портфеля.
+                </p>
+                <button onclick="document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' })" 
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl sm:rounded-3xl font-semibold text-base sm:text-lg flex items-center gap-2 sm:gap-3 transition-all shadow-lg">
+                    <span>Открыть калькулятор</span>
+                    <span class="text-xl sm:text-2xl">→</span>
+                </button>
+            </div>
+
+            <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl">
+                <h3 class="font-semibold text-emerald-600 mb-4 sm:mb-6 text-base sm:text-lg">
+                    Среднегодовая доходность (2021-2025)
+                </h3>
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow">
+                        <p class="text-xs text-slate-500">Авторский</p>
+                        <p class="text-2xl sm:text-4xl font-bold text-emerald-600 mt-1 sm:mt-2">13.54%</p>
+                        <p class="text-xs font-semibold text-emerald-600">Риск 4.27%</p>
+                    </div>
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow">
+                        <p class="text-xs text-slate-500">Классический</p>
+                        <p class="text-2xl sm:text-4xl font-bold text-red-600 mt-1 sm:mt-2">1.49%</p>
+                        <p class="text-xs text-red-600">Риск 17.87%</p>
+                    </div>
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow">
+                        <p class="text-xs text-slate-500">Всепогодный</p>
+                        <p class="text-2xl sm:text-4xl font-bold text-yellow-600 mt-1 sm:mt-2">11.38%</p>
+                        <p class="text-xs text-yellow-600">Риск 11.79%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- СТРУКТУРА ПОРТФЕЛЕЙ -->
+    <section id="overview" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <h2 class="text-3xl sm:text-4xl font-semibold mb-8 sm:mb-10 title-font text-white">Структура портфелей</h2>
+        <div class="grid md:grid-cols-3 gap-5 sm:gap-6">
+            <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl">
+                <h3 class="font-semibold text-xl sm:text-2xl mb-4 sm:mb-6">Авторский портфель</h3>
+                <div class="space-y-2 sm:space-y-3 text-sm">
+                    <div class="flex justify-between"><span class="text-slate-600">Флоатеры (КС+2%)</span><span class="font-bold">30%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">ОФЗ ПД (SBGB)</span><span class="font-bold">20%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">Корп. облигации (OBLG)</span><span class="font-bold">10%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">Квазивалютные облигации</span><span class="font-bold">15%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">Индекс МосБиржи (EQMX)</span><span class="font-bold">5%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">Акции 2-го эшелона</span><span class="font-bold">5%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">Золото (GLDRUB)</span><span class="font-bold">10%</span></div>
+                    <div class="flex justify-between"><span class="text-slate-600">Денежный рынок (LQDT)</span><span class="font-bold">5%</span></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl">
+                <h3 class="font-semibold text-xl sm:text-2xl mb-4 sm:mb-6">Классический портфель</h3>
+                <div class="space-y-4 sm:space-y-6 mt-6 sm:mt-8">
+                    <div class="flex justify-between text-base sm:text-lg"><span class="text-slate-600">Индекс МосБиржи (EQMX)</span><span class="font-bold">60%</span></div>
+                    <div class="flex justify-between text-base sm:text-lg"><span class="text-slate-600">ОФЗ ПД (SBGB)</span><span class="font-bold">40%</span></div>
+                </div>
+                <div class="mt-6 p-3 bg-slate-50 rounded-xl text-xs text-slate-500">ⓘ 60/40 — классическое распределение</div>
+            </div>
+            <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl">
+                <h3 class="font-semibold text-xl sm:text-2xl mb-4 sm:mb-6">Всепогодный портфель</h3>
+                <div class="space-y-4 sm:space-y-6 mt-6 sm:mt-8">
+                    <div class="flex justify-between text-base sm:text-lg"><span class="text-slate-600">Индекс МосБиржи (EQMX)</span><span class="font-bold">33.34%</span></div>
+                    <div class="flex justify-between text-base sm:text-lg"><span class="text-slate-600">ОФЗ ПД (SBGB)</span><span class="font-bold">33.33%</span></div>
+                    <div class="flex justify-between text-base sm:text-lg"><span class="text-slate-600">Золото (GLDRUB)</span><span class="font-bold">33.33%</span></div>
+                </div>
+                <div class="mt-6 p-3 bg-slate-50 rounded-xl text-xs text-slate-500">ⓘ Концепция Рэя Далио</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ -->
+    <section id="metrics" class="bg-slate-100 py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl font-semibold mb-6 sm:mb-8 title-font">Ключевые показатели (4 года: 11.2021 – 11.2025)</h2>
+            <div class="overflow-x-auto -mx-4 sm:mx-0">
+                <div class="inline-block min-w-full align-middle">
+                    <table class="min-w-full text-xs sm:text-sm border-collapse bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow">
+                        <thead>
+                            <tr class="border-b border-slate-200 bg-slate-50">
+                                <th class="text-left py-3 sm:py-5 px-4 sm:px-8 font-semibold">Показатель</th>
+                                <th class="text-center py-3 sm:py-5 px-3 sm:px-6 font-semibold">Авторский</th>
+                                <th class="text-center py-3 sm:py-5 px-3 sm:px-6 font-semibold">Классический</th>
+                                <th class="text-center py-3 sm:py-5 px-3 sm:px-6 font-semibold">Всепогодный</th>
+                              </tr>
+                        </thead>
+                        <tbody class="text-slate-700">
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Среднегодовая доходность</td>
+                                <td class="text-center font-bold text-emerald-600">13.54%</td><td class="text-center font-bold text-red-600">1.49%</td><td class="text-center font-bold text-yellow-600">11.38%</td></tr>
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Риск (волатильность)</td>
+                                <td class="text-center font-bold text-emerald-600">4.27%</td><td class="text-center font-bold text-red-600">17.87%</td><td class="text-center font-bold text-yellow-600">11.79%</td></tr>
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Максимальная просадка</td>
+                                <td class="text-center font-bold text-emerald-600">-5.94%</td><td class="text-center font-bold text-red-600">-21.20%</td><td class="text-center font-bold text-yellow-600">-8.22%</td></tr>
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Коэффициент Шарпа</td>
+                                <td class="text-center font-bold text-emerald-600">1.83</td><td class="text-center font-bold text-red-600">-0.24</td><td class="text-center font-bold text-yellow-600">0.48</td></tr>
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Коэффициент Сортино</td>
+                                <td class="text-center font-bold text-emerald-600">1.31</td><td class="text-center font-bold text-red-600">-0.24</td><td class="text-center font-bold text-yellow-600">0.67</td></tr>
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Коэффициент Омега</td>
+                                <td class="text-center font-bold text-emerald-600">3.33</td><td class="text-center font-bold text-red-600">1.90</td><td class="text-center font-bold text-yellow-600">2.43</td></tr>
+                            <tr class="border-b"><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Коэффициент Трейнора</td>
+                                <td class="text-center font-bold text-emerald-600">15.72</td><td class="text-center font-bold text-red-600">-0.06</td><td class="text-center font-bold text-yellow-600">0.20</td></tr>
+                            <tr><td class="py-3 sm:py-5 px-4 sm:px-8 font-medium">Бета (к рынку)</td>
+                                <td class="text-center font-bold text-emerald-600">0.005</td><td class="text-center font-bold text-red-600">0.661</td><td class="text-center font-bold text-yellow-600">0.280</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ИНТЕРАКТИВНЫЙ КАЛЬКУЛЯТОР -->
+    <section id="calculator" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 bg-white">
+        <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
+            <div class="lg:col-span-5">
+                <h2 class="title-font text-3xl sm:text-4xl font-semibold mb-4 sm:mb-6">Интерактивный прогноз</h2>
+                <p class="text-slate-600 mb-6 sm:mb-8 text-sm sm:text-base">Выберите макроэкономический сценарий. Сайт покажет прогнозную доходность портфелей на следующий год.</p>
+                
+                <div class="space-y-6 sm:space-y-8">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">Выберите сценарий</label>
+                        <select id="scenario-select" class="w-full bg-slate-50 rounded-2xl px-5 sm:px-6 py-4 text-lg sm:text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-slate-200 cursor-pointer">
+                            <option value="optimistic">Оптимистичный</option>
+                            <option value="base" selected>Базовый</option>
+                            <option value="pessimistic">Пессимистичный</option>
+                            <option value="negative">Негативный</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-5">
+                        <p class="text-sm font-medium text-slate-600 mb-3">Параметры сценария:</p>
+                        <div id="scenario-params" class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span>Ключевая ставка:</span><span id="param-ks" class="font-semibold">12%</span></div>
+                            <div class="flex justify-between"><span>Курс USD/RUB:</span><span id="param-usd" class="font-semibold">95 ₽</span></div>
+                            <div class="flex justify-between"><span>Индекс МосБиржи:</span><span id="param-moex" class="font-semibold">3100</span></div>
+                        </div>
+                    </div>
+
+                    <div class="text-xs bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                        Представленные значения носят иллюстративный характер и не являются прогнозом в строгом математическом смысле.
+                    </div>
+
+                    <!-- Блок для будущей функциональности -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-dashed border-slate-300">
+                        <p class="text-sm font-medium text-slate-600 mb-3">Собственный макропрогноз (в разработке)</p>
+                        <div class="space-y-3 mb-4">
+                            <div>
+                                <label class="block text-xs text-slate-500 mb-1">Ключевая ставка ЦБ РФ</label>
+                                <input type="number" step="0.1" value="16.5" disabled class="w-full bg-white rounded-xl px-4 py-2 text-base font-semibold border border-slate-200 disabled:bg-slate-100 disabled:text-slate-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-500 mb-1">Курс USD/RUB</label>
+                                <input type="number" step="0.5" value="77.61" disabled class="w-full bg-white rounded-xl px-4 py-2 text-base font-semibold border border-slate-200 disabled:bg-slate-100 disabled:text-slate-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-500 mb-1">Индекс МосБиржи (IMOEX)</label>
+                                <input type="number" step="10" value="2676" disabled class="w-full bg-white rounded-xl px-4 py-2 text-base font-semibold border border-slate-200 disabled:bg-slate-100 disabled:text-slate-400">
+                            </div>
+                        </div>
+                        <button disabled class="w-full bg-slate-300 text-slate-500 py-3 rounded-xl text-sm font-semibold cursor-not-allowed transition-all">
+                            Запланировано в следующей версии
+                        </button>
+                        <p class="text-xs text-slate-400 mt-3 text-center">Функция будет доступна в следующих обновлениях</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7">
+                <div id="results-panel" class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-100">
+                    <h3 class="font-semibold text-xl sm:text-2xl mb-5 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                        <span>Прогноз доходности</span>
+                    </h3>
+                    
+                    <div class="mb-6 sm:mb-8">
+                        <p class="text-xs sm:text-sm text-slate-500 mb-3">Ожидаемая годовая доходность активов</p>
+                        <div id="asset-table" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-xs sm:text-sm"></div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 sm:gap-6">
+                        <div class="bg-emerald-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center">
+                            <p class="text-emerald-700 text-[10px] sm:text-xs font-bold">АВТОРСКИЙ</p>
+                            <p id="author-return" class="text-xl sm:text-4xl font-bold text-emerald-700 mt-1">23.84%</p>
+                            <p class="text-[10px] text-slate-500">ожидаемая доходность</p>
+                        </div>
+                        <div class="bg-red-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center">
+                            <p class="text-red-700 text-[10px] sm:text-xs font-bold">КЛАССИЧЕСКИЙ</p>
+                            <p id="classic-return" class="text-xl sm:text-4xl font-bold text-red-700 mt-1">23.43%</p>
+                            <p class="text-[10px] text-slate-500">ожидаемая доходность</p>
+                        </div>
+                        <div class="bg-yellow-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center">
+                            <p class="text-yellow-700 text-[10px] sm:text-xs font-bold">ВСЕПОГОДНЫЙ</p>
+                            <p id="allweather-return" class="text-xl sm:text-4xl font-bold text-yellow-700 mt-1">27.74%</p>
+                            <p class="text-[10px] text-slate-500">ожидаемая доходность</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 sm:mt-8">
+                        <canvas id="returnChart" height="250" class="w-full"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- НАГЛЯДНАЯ АНАЛИТИКА - 4 ГРАФИКА -->
+    <section id="charts" class="bg-slate-900 text-white py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 class="title-font text-3xl sm:text-4xl font-semibold mb-6 sm:mb-8">Наглядная аналитика</h2>
+            <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- График 1: Риск vs Доходность -->
+                <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-800">
+                    <h4 class="font-semibold mb-3 sm:mb-4 text-base sm:text-lg">Риск vs Доходность (исторические данные)</h4>
+                    <canvas id="riskReturnChart" height="280" class="w-full"></canvas>
+                </div>
+
+                <!-- График 2: Коэффициенты Шарпа, Сортино, Омега -->
+                <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-800">
+                    <h4 class="font-semibold mb-3 sm:mb-4 text-base sm:text-lg">Коэффициенты эффективности</h4>
+                    <canvas id="ratiosChart" height="280" class="w-full"></canvas>
+                </div>
+
+                <!-- График 3: Максимальные просадки -->
+                <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-800">
+                    <h4 class="font-semibold mb-3 sm:mb-4 text-base sm:text-lg">Максимальные просадки</h4>
+                    <canvas id="drawdownChart" height="280" class="w-full"></canvas>
+                </div>
+
+                <!-- График 4: Коэффициент Трейнора и Бета -->
+                <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-800">
+                    <h4 class="font-semibold mb-3 sm:mb-4 text-base sm:text-lg">Трейнор и Бета</h4>
+                    <canvas id="treynorBetaChart" height="280" class="w-full"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР ИНВЕСТИЦИЙ -->
+    <section id="investment" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 bg-white">
+        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-3xl p-6 sm:p-10 shadow-xl">
+            <h2 class="title-font text-3xl sm:text-4xl font-semibold mb-4">Калькулятор инвестиций</h2>
+            <p class="text-slate-600 mb-8 text-sm sm:text-base">Рассчитайте потенциальную сумму ваших инвестиций через год</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Сумма инвестиций (₽)</label>
+                        <input type="number" id="investment-amount" value="100000" step="10000" class="w-full bg-white rounded-2xl px-5 py-4 text-2xl font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-slate-200">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Выберите сценарий</label>
+                        <select id="investment-scenario" class="w-full bg-white rounded-2xl px-5 py-4 text-base font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-slate-200">
+                            <option value="optimistic">Оптимистичный</option>
+                            <option value="base" selected>Базовый</option>
+                            <option value="pessimistic">Пессимистичный</option>
+                            <option value="negative">Негативный</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Выберите портфель</label>
+                        <select id="investment-portfolio" class="w-full bg-white rounded-2xl px-5 py-4 text-base font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-slate-200">
+                            <option value="author">Авторский портфель</option>
+                            <option value="classic">Классический портфель</option>
+                            <option value="allweather">Всепогодный портфель</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="calculateInvestment()" class="w-full bg-emerald-600 hover:bg-emerald-700 transition-all text-white py-4 rounded-2xl text-lg font-semibold flex items-center justify-center gap-3 shadow-md">
+                        <span>Рассчитать</span>
+                        <span class="text-2xl">💰</span>
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-lg text-center">
+                    <p class="text-slate-500 text-sm mb-2">Результат через 1 год</p>
+                    <p class="text-5xl sm:text-6xl font-bold text-emerald-600" id="result-amount">123 840 ₽</p>
+                    <p class="text-slate-500 mt-3">Доходность: <span id="result-return" class="font-semibold text-emerald-600">23.84%</span></p>
+                    <p class="text-slate-500">Прибыль: <span id="result-profit" class="font-semibold text-emerald-600">23 840 ₽</span></p>
+                    <div class="mt-6 pt-6 border-t border-slate-100 text-xs text-slate-400">
+                        * Расчёт основан на выбранных сценарии и портфеле. Данные носят иллюстративный характер.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-800 text-slate-400 py-8 sm:py-12 text-center text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Сайт создан для защиты магистерской диссертации. Расчёты из файла «ГЛАВНЫЕ РАСЧЕТЫ.xlsx».</p>
+            <p class="mt-2">Сохраните как <strong>index.html</strong> и откройте в браузере</p>
+            <p class="mt-4 text-[10px] sm:text-xs">Для публикации на телефонах комиссии — загрузите на GitHub Pages или любой хостинг</p>
+        </div>
+    </footer>
+
+    <script>
+        // ========== ДАННЫЕ ИЗ ВАШЕГО EXCEL ==========
+        
+        const scenarioParams = {
+            optimistic: { ks: 10, usd: 100, moex: 3500, name: 'Оптимистичный' },
+            base: { ks: 12, usd: 95, moex: 3100, name: 'Базовый' },
+            pessimistic: { ks: 14, usd: 85, moex: 2800, name: 'Пессимистичный' },
+            negative: { ks: 18, usd: 80, moex: 2600, name: 'Негативный' }
+        };
+        
+        const assetReturns = {
+            optimistic: { floaters: 15.25, sbgb: 32.70, oblg: 36.70, quasi: 36.13, eqmx: 38.79, tier2: 48.79, gold: 49.80, lqdt: 14.17 },
+            base: { floaters: 16.25, sbgb: 22.80, oblg: 26.80, quasi: 29.48, eqmx: 23.84, tier2: 33.84, gold: 36.60, lqdt: 15.31 },
+            pessimistic: { floaters: 17.25, sbgb: 13.00, oblg: 17.00, quasi: 16.18, eqmx: 12.63, tier2: 22.63, gold: 14.60, lqdt: 16.45 },
+            negative: { floaters: 19.25, sbgb: -6.60, oblg: -2.60, quasi: 9.54, eqmx: 5.16, tier2: 15.16, gold: 0.60, lqdt: 18.61 }
+        };
+        
+        const portfolioReturns = {
+            optimistic: { author: 30.27, classic: 36.36, allweather: 40.42 },
+            base: { author: 23.84, classic: 23.43, allweather: 27.74 },
+            pessimistic: { author: 15.94, classic: 12.78, allweather: 13.40 },
+            negative: { author: 7.64, classic: 0.46, allweather: -0.27 }
+        };
+        
+        // Данные для графиков
+        const portfolioRisks = { author: 4.27, classic: 17.87, allweather: 11.79 };
+        const sharpeRatios = { author: 1.83, classic: -0.24, allweather: 0.48 };
+        const sortinoRatios = { author: 1.31, classic: -0.24, allweather: 0.67 };
+        const omegaRatios = { author: 3.33, classic: 1.90, allweather: 2.43 };
+        const maxDrawdowns = { author: -5.94, classic: -21.20, allweather: -8.22 };
+        const treynorRatios = { author: 15.72, classic: -0.06, allweather: 0.20 };
+        const betas = { author: 0.005, classic: 0.661, allweather: 0.280 };
+        
+        const assetNames = {
+            floaters: 'Флоатеры', sbgb: 'ОФЗ ПД', oblg: 'Корп. облигации',
+            quasi: 'Квазивалютные', eqmx: 'Индекс ММВБ', tier2: '2-й эшелон',
+            gold: 'Золото', lqdt: 'Ден. рынок'
+        };
+        
+        const assetList = ['floaters', 'sbgb', 'oblg', 'quasi', 'eqmx', 'tier2', 'gold', 'lqdt'];
+        
+        function updateScenario() {
+            const select = document.getElementById('scenario-select');
+            const scenario = select.value;
+            
+            const params = scenarioParams[scenario];
+            document.getElementById('param-ks').textContent = params.ks + '%';
+            document.getElementById('param-usd').textContent = params.usd + ' ₽';
+            document.getElementById('param-moex').textContent = params.moex;
+            
+            const returns = assetReturns[scenario];
+            let assetTableHTML = '';
+            for (let i = 0; i < assetList.length; i++) {
+                const key = assetList[i];
+                const returnValue = returns[key];
+                const returnPercent = returnValue.toFixed(2);
+                const isNegative = returnValue < 0;
+                assetTableHTML += `
+                    <div class="bg-white rounded-xl p-2 sm:p-3 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-600 text-xs sm:text-sm">${assetNames[key]}</span>
+                            <span class="font-bold ${isNegative ? 'text-red-500' : 'text-emerald-600'} text-sm sm:text-base">${returnPercent}%</span>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('asset-table').innerHTML = assetTableHTML;
+            
+            const portReturns = portfolioReturns[scenario];
+            document.getElementById('author-return').textContent = portReturns.author.toFixed(2) + '%';
+            document.getElementById('classic-return').textContent = portReturns.classic.toFixed(2) + '%';
+            document.getElementById('allweather-return').textContent = portReturns.allweather.toFixed(2) + '%';
+            
+            renderReturnChart(portReturns.author, portReturns.classic, portReturns.allweather);
+        }
+        
+        // Столбчатая диаграмма для калькулятора
+        let returnChartInstance = null;
+        
+        function renderReturnChart(author, classic, allweather) {
+            const ctx = document.getElementById('returnChart').getContext('2d');
+            if (returnChartInstance) returnChartInstance.destroy();
+            
+            returnChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Авторский', 'Классический', 'Всепогодный'],
+                    datasets: [{
+                        label: 'Ожидаемая доходность (%)',
+                        data: [author, classic, allweather],
+                        backgroundColor: ['#10b981', '#ef4444', '#eab308'],
+                        borderRadius: 8,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `${ctx.raw.toFixed(2)}%` } } },
+                    scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' }, title: { display: true, text: 'Доходность (%)' } } }
+                }
+            });
+        }
+        
+        // График 1: Риск vs Доходность
+        let scatterChartInstance = null;
+        function renderRiskReturnChart() {
+            const ctx = document.getElementById('riskReturnChart').getContext('2d');
+            if (scatterChartInstance) scatterChartInstance.destroy();
+            scatterChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Авторский', data: [{x: 4.27, y: 13.54}], backgroundColor: '#10b981', borderColor: '#10b981', pointRadius: 12 },
+                        { label: 'Классический', data: [{x: 17.87, y: 1.49}], backgroundColor: '#ef4444', borderColor: '#ef4444', pointRadius: 12 },
+                        { label: 'Всепогодный', data: [{x: 11.79, y: 11.38}], backgroundColor: '#eab308', borderColor: '#eab308', pointRadius: 12 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: true,
+                    plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: риск ${ctx.parsed.x}%, доходность ${ctx.parsed.y}%` } } },
+                    scales: { x: { title: { display: true, text: 'Риск (%)' }, min: 0, max: 22 }, y: { title: { display: true, text: 'Доходность (%)' }, min: 0, max: 18 } }
+                }
+            });
+        }
+        
+        // График 2: Коэффициенты
+        let ratiosChartInstance = null;
+        function renderRatiosChart() {
+            const ctx = document.getElementById('ratiosChart').getContext('2d');
+            if (ratiosChartInstance) ratiosChartInstance.destroy();
+            ratiosChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Авторский', 'Классический', 'Всепогодный'],
+                    datasets: [
+                        { label: 'Шарп', data: [sharpeRatios.author, sharpeRatios.classic, sharpeRatios.allweather], backgroundColor: '#10b981', borderRadius: 6 },
+                        { label: 'Сортино', data: [sortinoRatios.author, sortinoRatios.classic, sortinoRatios.allweather], backgroundColor: '#3b82f6', borderRadius: 6 },
+                        { label: 'Омега', data: [omegaRatios.author, omegaRatios.classic, omegaRatios.allweather], backgroundColor: '#eab308', borderRadius: 6 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}` } } } }
+            });
+        }
+        
+        // График 3: Максимальные просадки
+        let drawdownChartInstance = null;
+        function renderDrawdownChart() {
+            const ctx = document.getElementById('drawdownChart').getContext('2d');
+            if (drawdownChartInstance) drawdownChartInstance.destroy();
+            drawdownChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Авторский', 'Классический', 'Всепогодный'],
+                    datasets: [{ label: 'Максимальная просадка (%)', data: [maxDrawdowns.author, maxDrawdowns.classic, maxDrawdowns.allweather], backgroundColor: ['#10b981', '#ef4444', '#eab308'], borderRadius: 8 }]
+                },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.raw.toFixed(2)}%` } } } }
+            });
+        }
+        
+        // График 4: Трейнор и Бета
+        let treynorBetaChartInstance = null;
+        function renderTreynorBetaChart() {
+            const ctx = document.getElementById('treynorBetaChart').getContext('2d');
+            if (treynorBetaChartInstance) treynorBetaChartInstance.destroy();
+            treynorBetaChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Авторский', 'Классический', 'Всепогодный'],
+                    datasets: [
+                        { label: 'Трейнор', data: [treynorRatios.author, treynorRatios.classic, treynorRatios.allweather], backgroundColor: '#8b5cf6', borderRadius: 6, yAxisID: 'y' },
+                        { label: 'Бета (x10 для наглядности)', data: [betas.author * 10, betas.classic * 10, betas.allweather * 10], backgroundColor: '#f59e0b', borderRadius: 6, yAxisID: 'y' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.dataset.label === 'Бета (x10 для наглядности)' ? (ctx.raw / 10).toFixed(3) : ctx.raw.toFixed(2)}` } } } }
+            });
+        }
+        
+        // Калькулятор инвестиций
+        function calculateInvestment() {
+            const amount = parseFloat(document.getElementById('investment-amount').value);
+            const scenario = document.getElementById('investment-scenario').value;
+            const portfolio = document.getElementById('investment-portfolio').value;
+            
+            let returnRate = 0;
+            let portfolioName = '';
+            
+            if (portfolio === 'author') {
+                returnRate = portfolioReturns[scenario].author;
+                portfolioName = 'Авторский';
+            } else if (portfolio === 'classic') {
+                returnRate = portfolioReturns[scenario].classic;
+                portfolioName = 'Классический';
+            } else {
+                returnRate = portfolioReturns[scenario].allweather;
+                portfolioName = 'Всепогодный';
+            }
+            
+            const resultAmount = amount * (1 + returnRate / 100);
+            const profit = resultAmount - amount;
+            
+            document.getElementById('result-amount').textContent = Math.round(resultAmount).toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('result-return').textContent = returnRate.toFixed(2) + '%';
+            document.getElementById('result-profit').textContent = Math.round(profit).toLocaleString('ru-RU') + ' ₽';
+        }
+        
+        window.onload = function() {
+            renderRiskReturnChart();
+            renderRatiosChart();
+            renderDrawdownChart();
+            renderTreynorBetaChart();
+            updateScenario();
+            
+            document.getElementById('scenario-select').addEventListener('change', updateScenario);
+            
+            console.log('%c✅ Сайт для защиты магистерской диссертации готов!', 'color:#10b981; font-size:14px; font-weight:bold');
+        };
+        
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (scatterChartInstance) scatterChartInstance.resize();
+                if (ratiosChartInstance) ratiosChartInstance.resize();
+                if (drawdownChartInstance) drawdownChartInstance.resize();
+                if (treynorBetaChartInstance) treynorBetaChartInstance.resize();
+                if (returnChartInstance) returnChartInstance.resize();
+            }, 250);
+        });
+    </script>
+</body>
+</html>
